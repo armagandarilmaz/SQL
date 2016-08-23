@@ -1,0 +1,17 @@
+// Anket sonuçları
+SELECT
+demo.demo_courses.name,
+activity_survey.id,
+Count(activity_survey_users.raiting) AS toplam,
+SUM(CASE WHEN activity_survey_users.raiting=3 THEN 1 ELSE 0 END) AS Katilan,
+SUM(CASE WHEN activity_survey_users.raiting=2 THEN 1 ELSE 0 END) AS Kararsiz,
+SUM(CASE WHEN activity_survey_users.raiting=1 THEN 1 ELSE 0 END) AS Katılmayan
+FROM
+demo.demo_course_activity_survey AS activity_survey
+INNER JOIN demo.demo_course_activity_survey_users AS activity_survey_users ON activity_survey.id = activity_survey_users.course_activity_survey_id
+AND activity_survey_users.raiting != 0
+INNER JOIN demo.demo_course_activity ON demo.demo_course_activity.id = activity_survey.course_activity_id
+INNER JOIN demo.demo_courses ON demo.demo_courses.id = demo.demo_course_activity.course_id
+GROUP BY
+demo.demo_courses.name,
+activity_survey.id
